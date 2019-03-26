@@ -700,7 +700,7 @@ class RawAsyncHBaseAdmin implements AsyncAdmin {
     CompletableFuture<Boolean> future = new CompletableFuture<>();
     addListener(isTableEnabled(tableName), (enabled, error) -> {
       if (error != null) {
-        future.completeExceptionally(error);
+        future.complete(false);
         return;
       }
       if (!enabled) {
@@ -710,7 +710,7 @@ class RawAsyncHBaseAdmin implements AsyncAdmin {
           AsyncMetaTableAccessor.getTableHRegionLocations(metaTable, Optional.of(tableName)),
           (locations, error1) -> {
             if (error1 != null) {
-              future.completeExceptionally(error1);
+              future.complete(false);
               return;
             }
             List<HRegionLocation> notDeployedRegions = locations.stream()
